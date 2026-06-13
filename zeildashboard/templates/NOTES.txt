@@ -1,0 +1,11 @@
+zeildashboard {{ .Chart.AppVersion }} deployed as release "{{ .Release.Name }}".
+
+Image:   {{ include "zeildashboard.image" . }}
+{{- if .Values.ingress.enabled }}
+URL:     https://{{ .Values.ingress.host }}/
+{{- else }}
+Service: {{ include "zeildashboard.fullname" . }}:{{ .Values.service.port }} (ClusterIP)
+{{- end }}
+
+Check rollout:
+  kubectl -n {{ .Release.Namespace }} rollout status deploy/{{ include "zeildashboard.fullname" . }}

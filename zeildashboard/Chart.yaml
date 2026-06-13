@@ -1,0 +1,20 @@
+apiVersion: v2
+name: zeildashboard
+description: Rhine sailing-conditions dashboard (standalone, served from ghcr.io/jvhaarst/zeildashboard)
+type: application
+version: 0.1.0
+# Tracks the published ghcr.io/jvhaarst/zeildashboard image tag.
+# Renovate bumps this automatically when a new image is released.
+appVersion: "1.4.1"
+keywords:
+  - sailing
+  - rhine
+  - dashboard
+  - weather
+  - php
+home: https://zeilweer.vanhaarst.net
+sources:
+  - https://github.com/jvhaarst/zeildashboard
+  - https://github.com/jvhaarst/zeildashboard_k8s
+maintainers:
+  - name: jvhaarst

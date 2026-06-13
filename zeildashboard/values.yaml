@@ -1,0 +1,41 @@
+# Default values for zeildashboard.
+
+image:
+  repository: ghcr.io/jvhaarst/zeildashboard
+  # Empty = use the chart's appVersion (the single source of truth Renovate bumps).
+  # Set this only to pin/override a specific tag.
+  tag: ""
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+# UI language passed to the dashboards (RSC_LANG); a matching lang/<code>.php
+# must exist in the image. "nl" = Dutch (default).
+language: "nl"
+
+service:
+  port: 80
+
+ingress:
+  enabled: true
+  className: traefik
+  host: zeilweer.vanhaarst.net
+  # cert-manager ClusterIssuer for TLS; empty disables the annotation.
+  clusterIssuer: letsencrypt-production
+  tls: true
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: "1"
+    memory: 192Mi
+
+podSecurityContext: {}
+securityContext: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
+podAnnotations: {}
+commonLabels: {}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^zeildashboard/Chart\\.yaml$"],
+      "matchStrings": [
+        "appVersion:\\s*\"(?<currentValue>v?[\\d.]+)\""
+      ],
+      "depNameTemplate": "ghcr.io/jvhaarst/zeildashboard",
+      "datasourceTemplate": "docker"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchDepNames": ["ghcr.io/jvhaarst/zeildashboard"],
+      "groupName": "zeildashboard image"
+    }
+  ]
+}

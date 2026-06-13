@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "zeildashboard.fullname" . }}
+  labels:
+    {{- include "zeildashboard.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "zeildashboard.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
