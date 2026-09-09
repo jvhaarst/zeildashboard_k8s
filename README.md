@@ -10,7 +10,7 @@ repository via GitHub Pages so it can be added as a chart repository in Rancher.
 ## How updates flow
 
 ```
-php:8.3-apache release ──▶ Renovate (zeildashboard repo) bumps Dockerfile
+php:*-apache release   ──▶ Renovate (zeildashboard repo) bumps Dockerfile
         │                          │
         │                          ▼
  dashboard code change ───▶ new image  ghcr.io/jvhaarst/zeildashboard:1.4.N
