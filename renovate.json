@@ -18,7 +18,20 @@
   ],
   "packageRules": [
     {
-      "matchDepNames": ["ghcr.io/jvhaarst/zeildashboard"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest",
+        "pin"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "matchDepNames": [
+        "ghcr.io/jvhaarst/zeildashboard"
+      ],
       "groupName": "zeildashboard image"
     }
   ]
