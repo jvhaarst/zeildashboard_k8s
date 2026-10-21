@@ -36,19 +36,14 @@ spec:
           env:
             - name: RSC_LANG
               value: {{ .Values.language | quote }}
+          {{- with .Values.readinessProbe }}
           readinessProbe:
-            httpGet:
-              # index.php returns a quick 302 and makes no upstream API calls.
-              path: /
-              port: http
-            initialDelaySeconds: 5
-            periodSeconds: 15
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.livenessProbe }}
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
-            initialDelaySeconds: 15
-            periodSeconds: 30
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

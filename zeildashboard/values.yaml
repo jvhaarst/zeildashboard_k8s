@@ -24,6 +24,44 @@ ingress:
   clusterIssuer: letsencrypt-production
   tls: true
 
+# Probes.
+#
+# The old hardcoded probes were an httpGet on `/` with the comment "index.php returns a
+# quick 302 and makes no upstream API calls". That reasoning does not hold: **kubelet
+# follows the redirect**, so the probe actually renders combined-sailing-conditions.php,
+# which calls Open-Meteo and Rijkswaterstaat with HTTP_TIMEOUT = 10 in class-fetcher.php.
+# Against kubelet's DEFAULT timeoutSeconds of 1, that fails every single time.
+#
+# It stayed hidden while both upstreams were fast. On 2026-10-21 Rijkswaterstaat stopped
+# answering -- DNS resolves, TCP never connects -- so every render took the full 10 s, the
+# 1 s probe failed, and liveness restarted the pod five times in nine minutes. The page
+# itself was fine: Apache logged `PHP/8.5.12 configured -- resuming normal operations` on
+# each start and served the dashboard with 200.
+#
+# Hence: liveness is a tcpSocket check, because "is Apache listening" is what liveness
+# should answer and it cannot be held hostage by a third-party API. Readiness still
+# fetches the page, but with a timeout longer than the app's own upstream timeout and a
+# period long enough not to spend a worker on it constantly.
+#
+# Set either to null to drop that probe entirely.
+livenessProbe:
+  tcpSocket:
+    port: http
+  initialDelaySeconds: 15
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 60
+  # Longer than class-fetcher.php's HTTP_TIMEOUT of 10, or a single slow upstream marks
+  # the pod unready while it is serving perfectly well.
+  timeoutSeconds: 15
+  failureThreshold: 3
+
 resources:
   requests:
     cpu: 50m
